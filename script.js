@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Пример ответа от REST API
+    // симуляция апи
     const apiResponse = {
         "services": [
             {
@@ -85,10 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ]
     };
     
-    // Остальной код (как в предыдущем ответе) остается неизменным
     
-
-    // Строим дерево
     const treeContainer = document.getElementById('tree-container');
     buildTree(treeContainer, apiResponse.services);
 });
@@ -96,10 +93,10 @@ document.addEventListener("DOMContentLoaded", function () {
 function buildTree(container, services) {
     const tree = document.createElement('ul');
 
-    // Группируем услуги по head (id вышележащего узла)
+    
     const groupedServices = groupByHead(services);
 
-    // Строим корневые элементы
+    
     groupedServices[null].forEach(service => {
         const rootNode = createNodeElement(service);
         buildSubtree(rootNode, groupedServices, service.id);
@@ -113,7 +110,7 @@ function buildSubtree(parentNode, groupedServices, parentId) {
     if (groupedServices[parentId]) {
         const ul = document.createElement('ul');
 
-        // Сортируем услуги по sorthead
+        
         const sortedServices = groupedServices[parentId].sort((a, b) => a.sorthead - b.sorthead);
 
         sortedServices.forEach(service => {
@@ -128,10 +125,18 @@ function buildSubtree(parentNode, groupedServices, parentId) {
 
 function createNodeElement(service) {
     const li = document.createElement('li');
-    li.textContent = service.name + ' (' + service.price + ')';
+    
+    if (service.node === 0) {
+        
+        li.textContent = service.name + ' (' + formatPrice(service.price) + ')';
+    } else {
+        
+        li.textContent = service.name;
+    }
+
     li.className = 'tree-node';
 
-    // Обработчик события клика для открытия/закрытия поддерева
+    
     li.addEventListener('click', function (event) {
         event.stopPropagation();
         toggleSubtree(li);
@@ -145,6 +150,10 @@ function toggleSubtree(node) {
     if (ul) {
         ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
     }
+}
+
+function formatPrice(price) {
+    return price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }).replace(/\.\d{2}$/, '');
 }
 
 function groupByHead(services) {
