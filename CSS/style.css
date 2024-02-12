@@ -1,0 +1,10 @@
+.tree-node {
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.tree-node:hover {
+    background-color: #f0f0f0;
+}
